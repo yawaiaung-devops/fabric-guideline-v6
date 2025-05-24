@@ -1,23 +1,26 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import dts from "vite-plugin-dts";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), dts()],
   build: {
     lib: {
-      entry: "./src/index.ts",
-      name: "fabric-guideline-v6",
-      fileName: "fabric-guideline-v6",
-      formats: ["cjs", "es", "umd"],
+      entry: "src/index.ts",
+      name: "FabricV6Guideline",
+      fileName: (format) => `index.${format}.js`,
+      formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: "fabric",
+      external: ["react", "react-dom", "fabric"],
       output: {
         globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
           fabric: "fabric",
         },
       },
     },
+    outDir: "dist",
   },
 });

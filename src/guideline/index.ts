@@ -2,10 +2,27 @@ import { Line, type Canvas, type FabricObject } from "fabric";
 
 const SNAPPING_DISTANCE = 180;
 const DEFAULT_STROKE_COLOR = "#ff4444";
-class GuideLine {
+
+type strokeOptionProps = Partial<{
+  lineColor: string;
+  lineWidth: number;
+  canvasCenterLine: boolean;
+  opacity: number;
+  strokeDashArray: number[];
+}>;
+export class GuideLine {
   private canvas: Canvas;
-  constructor(canvas: Canvas) {
+  private strokeOption?: strokeOptionProps;
+
+  constructor(canvas: Canvas, strokeOption?: strokeOptionProps) {
     this.canvas = canvas;
+    this.strokeOption = {
+      lineColor: strokeOption?.lineColor ?? DEFAULT_STROKE_COLOR,
+      lineWidth: strokeOption?.lineWidth ?? 1,
+      canvasCenterLine: strokeOption?.canvasCenterLine ?? true,
+      opacity: strokeOption?.opacity ?? 1,
+      strokeDashArray: strokeOption?.strokeDashArray ?? [5, 5],
+    };
   }
 
   init() {
@@ -37,10 +54,11 @@ class GuideLine {
 
       // CANVAS VERTICAL CENTER LINE
       if (
+        this.strokeOption?.canvasCenterLine &&
         Math.abs(this.canvas.width / 2 - selectedObject.left) <
-        SNAPPING_DISTANCE
+          SNAPPING_DISTANCE
       )
-        this.createVerticalLine(this.canvas.width / 2, DEFAULT_STROKE_COLOR);
+        this.createVerticalLine(this.canvas.width / 2);
     }
 
     if (Math.abs(selectedObject.top) < this.canvas.height) {
@@ -54,38 +72,39 @@ class GuideLine {
 
       // CANVAS HORIZONTAL CENTER LINE
       if (
+        this.strokeOption?.canvasCenterLine &&
         Math.abs(this.canvas.height / 2 - selectedObject.top) <
-        SNAPPING_DISTANCE
+          SNAPPING_DISTANCE
       )
-        this.createHorizontalLine(this.canvas.height / 2, DEFAULT_STROKE_COLOR);
+        this.createHorizontalLine(this.canvas.height / 2);
     }
   }
 
-  private createVerticalLine(x: number, stroke?: string) {
+  private createVerticalLine(x: number) {
     const line = new Line([x, 0, x, this.canvas?.height], {
       id: "vertical-",
-      stroke: stroke || DEFAULT_STROKE_COLOR,
-      strokeWidth: 1,
+      stroke: this.strokeOption?.lineColor,
+      strokeWidth: this.strokeOption?.lineWidth,
       selectable: false,
       evented: false,
-      strokeDashArray: [5, 5],
-      opacity: 1,
+      strokeDashArray: this.strokeOption?.strokeDashArray,
+      opacity: this.strokeOption?.opacity,
     });
 
     this.canvas.add(line);
     this.canvas.renderAll();
   }
 
-  private createHorizontalLine(x: number, stroke?: string) {
+  private createHorizontalLine(x: number) {
     if (!this.canvas) return;
     const line = new Line([0, x, this.canvas.width, x], {
       id: "horizontal-",
-      stroke: stroke || DEFAULT_STROKE_COLOR,
-      strokeWidth: 1,
+      stroke: this.strokeOption?.lineColor,
+      strokeWidth: this.strokeOption?.lineWidth,
       selectable: false,
       evented: false,
-      strokeDashArray: [5, 5],
-      opacity: 1,
+      strokeDashArray: this.strokeOption?.strokeDashArray,
+      opacity: this.strokeOption?.opacity,
     });
     this.canvas.add(line);
     this.canvas.renderAll();
@@ -108,5 +127,3 @@ class GuideLine {
     this.canvas.renderAll();
   }
 }
-
-export default GuideLine;

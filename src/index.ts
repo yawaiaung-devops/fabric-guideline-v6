@@ -1,1 +1,1 @@
-export * as GuideLine from "./guideline";
+export { GuideLine } from "./guideline";

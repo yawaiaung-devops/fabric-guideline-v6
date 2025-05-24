@@ -1,11 +1,11 @@
 {
   "name": "fabric-v6-guideline",
   "author": "yawai",
-  "private": false,
-  "version": "1.0.1",
+  "version": "0.0.7",
   "license": "MIT",
-  "main": "dist/fabric-v6-guideline.cjs",
-  "module": "dist/fabric-v6-guideline.es",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/yawaiaung-devops/fabric-guideline-v6"
@@ -25,10 +25,18 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs.js"
+    }
+  },
   "dependencies": {
     "fabric": "^6.6.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
