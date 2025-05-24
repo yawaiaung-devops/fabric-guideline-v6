@@ -3,8 +3,13 @@
   "author": "yawai",
   "private": false,
   "version": "1.0.1",
+  "license": "MIT",
   "main": "dist/fabric-v6-guideline.cjs",
   "module": "dist/fabric-v6-guideline.es",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yawaiaung-devops/fabric-guideline-v6"
+  },
   "type": "module",
   "keywords": [
     "fabric",
