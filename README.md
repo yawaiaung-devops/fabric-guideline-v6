@@ -41,5 +41,16 @@ const guideline = new GuideLine(fabricCanvas, {
   canvasCenterLine: false, // default true
   opacity: 0.5, //default 1
   strokeDashArray: [10, 10], // default [5,5]
+  snapLineColor: "#ff4444", // default #ff4444
+  threshold: 20, // default 20,
 });
 ```
+
+### Options
+
+- **lineColor**: the alignment line color
+- **lineWidth**: the alignment line width
+- **canvasCenterLine**: whether to display the canvas center line
+- **opacity**: the alignment line opacity
+- **strokeDashArray**: the alignment line dash array
+- **threshold**: to determine when to display alignment guides as the selected object is being moved near other objects.;
