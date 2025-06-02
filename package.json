@@ -1,7 +1,7 @@
 {
   "name": "fabric-v6-guideline",
   "author": "yawai",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
