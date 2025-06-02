@@ -9,6 +9,8 @@
 - Auto snap to the canvas center line
 - Zero dependencies
 
+![Demo](public/demo.png)
+
 ## Quick Start
 
 ```shell
