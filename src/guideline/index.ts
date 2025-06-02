@@ -9,6 +9,8 @@ type strokeOptionProps = Partial<{
   opacity: number;
   strokeDashArray: number[];
   threshold: number;
+  autoSnap: boolean;
+  autoSnapThreshold: number;
   snapLineColor: string;
 }>;
 
@@ -19,6 +21,8 @@ const DEFAULT_STROKE_OPTION: strokeOptionProps = {
   opacity: 1,
   strokeDashArray: [5, 5],
   threshold: 20,
+  autoSnap: false,
+  autoSnapThreshold: 10,
   snapLineColor: "#1111ff",
 };
 export class GuideLine {
@@ -36,6 +40,9 @@ export class GuideLine {
   init() {
     this.canvas.on("selection:updated", () => this.clearGuideLine());
     this.canvas.on("object:moving", ({ target }) => {
+      if (this.strokeOption?.autoSnap) {
+        this.snap(target);
+      }
       this.handleObjectMoving(target);
     });
     this.canvas.on("object:scaling", ({ target }) =>
@@ -154,6 +161,66 @@ export class GuideLine {
 
     this.canvas.add(line);
     this.canvas.renderAll();
+  }
+
+  private snap(selectedObject: FabricObject) {
+    const width = selectedObject.width;
+    const height = selectedObject.height;
+    const leftEdge = selectedObject.left;
+    const topEdge = selectedObject.top;
+    const right = leftEdge + width * selectedObject.scaleX;
+    const bottom = topEdge + height * selectedObject.scaleY;
+
+    const canvasCenterX = this.canvas.height / 2;
+    const canvasCenterY = this.canvas.width / 2;
+
+    const threshold = this.strokeOption?.autoSnapThreshold || 10;
+    const inThreshold = (a: number, b: number) => Math.abs(a - b) <= threshold;
+    // horizontal snap
+    if (
+      inThreshold(canvasCenterX, topEdge) ||
+      inThreshold(topEdge, canvasCenterX)
+    ) {
+      selectedObject.set({
+        top: canvasCenterX,
+      });
+      selectedObject.setCoords();
+      this.canvas.requestRenderAll();
+    }
+
+    const topInThreshold = inThreshold(canvasCenterX, topEdge);
+    const bottomInThreshold = inThreshold(bottom, canvasCenterX);
+
+    if (topInThreshold) {
+      selectedObject.set({
+        top: canvasCenterX,
+      });
+      selectedObject.setCoords();
+      this.canvas.requestRenderAll();
+    } else if (bottomInThreshold) {
+      selectedObject.set({
+        top: canvasCenterX - selectedObject.height * selectedObject.scaleY,
+      });
+      selectedObject.setCoords();
+      this.canvas.requestRenderAll();
+    }
+    // vertical snap
+    const rightInThreshold = inThreshold(right, canvasCenterY);
+    const leftInThreshold = inThreshold(leftEdge, canvasCenterY);
+
+    if (leftInThreshold) {
+      selectedObject.set({
+        left: canvasCenterY,
+      });
+      selectedObject.setCoords();
+      this.canvas.requestRenderAll();
+    } else if (rightInThreshold) {
+      selectedObject.set({
+        left: canvasCenterY - selectedObject.width * selectedObject.scaleX,
+      });
+      selectedObject.setCoords();
+      this.canvas.requestRenderAll();
+    }
   }
 
   private createHorizontalLine(x: number) {

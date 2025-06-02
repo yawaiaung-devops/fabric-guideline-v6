@@ -1,12 +1,13 @@
 # fabric-v6-guideline
 
-🤩 Help you easily append guidelines to your canvas for the selected objects. It help you easily aligning to your object with the others.
+- Help you easily append guidelines to your canvas for the selected objects. It help you easily aligning to your object with the others. And Auto snap when the object moved to the center line of the canvas
 
 ## Features
 
-- 😝 Easily append guidelines to your fabric.js canvas
-- 🛠️ Customize guidelines' style and other options
-- 📦 Zero dependencies
+- Easily append guidelines to your fabric.js canvas
+- Customize guidelines' style and other options
+- Auto snap to the canvas center line
+- Zero dependencies
 
 ## Quick Start
 
@@ -43,6 +44,8 @@ const guideline = new GuideLine(fabricCanvas, {
   strokeDashArray: [10, 10], // default [5,5]
   snapLineColor: "#ff4444", // default #ff4444
   threshold: 20, // default 20,
+  autoSnap: false,
+  autoSnapThreshold: 10,
 });
 ```
 
@@ -54,3 +57,5 @@ const guideline = new GuideLine(fabricCanvas, {
 - **opacity**: the alignment line opacity
 - **strokeDashArray**: the alignment line dash array
 - **threshold**: to determine when to display alignment guides as the selected object is being moved near other objects.;
+- **autoSnap**: when the selected object moved to canvas center line, it will snap to the center line
+- **autoSnapThreshold**: to determine when to snap to the canvas center line.
